@@ -5,7 +5,7 @@ const toDoListRouter = require('./src/routes/toDoListRouter');
 const toDoItemRouter = require('./src/routes/toDoItemRouter')
 
 db.sequelize.sync().then(()=>{
-    console.log("Database is ready");
+    //console.log("Database is ready");
 })
 
 const app = express();
@@ -26,3 +26,4 @@ app.listen(8000, ()=>{
     console.log("Server running on port 8000");
 })
 
+module.exports = app;
