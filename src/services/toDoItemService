@@ -1,0 +1,58 @@
+const db = require("../models/db");
+const ToDoItem = db.toDoItems;
+
+async function getAllByListId(toDoListId,match, sort){
+    if (sort.length){
+        sort = [sort]
+    };
+    const result = await ToDoItem.findAll({where:{toDoListId:toDoListId, ...match},order:sort});
+    return result;
+}
+
+async function getByItemId(toDoListId, toDoItemId){
+    
+    const result = await ToDoItem.findOne({ where: {id:toDoItemId, toDoListId:toDoListId }} );
+    return result;
+}
+
+async function create(toDoListId, toDoItem){
+    toDoItem.status = "unchecked";
+    toDoItem.toDoListId = toDoListId;
+    
+    const result = await ToDoItem.create(toDoItem);
+    return result;
+}
+
+async function checkOrUncheck(toDoListId, toDoItemId){
+    
+    const itemToBeUpdated = await ToDoItem.findOne({ where: {id:toDoItemId, toDoListId:toDoListId }} );
+    itemToBeUpdated.status = itemToBeUpdated.status === "checked" ? "unchecked" : "checked";
+    const result = await itemToBeUpdated.save();
+    //console.log(count);
+    return result;
+}
+
+async function update(toDoListId, toDoItemId, updatedToDoItem){
+    
+    const count = await ToDoItem.update(updatedToDoItem, { where: {id:toDoItemId, toDoListId:toDoListId } });
+    if (count[0] === 1){
+        return await ToDoItem.findByPk(toDoItemId);
+    }
+}
+
+async function remove(toDoListId, toDoItemId){
+    
+    const count = await ToDoItem.destroy({where:{id:toDoItemId, toDoListId: toDoListId}});
+    return count;
+
+
+}
+
+module.exports = {
+    getAllByListId,
+    getByItemId,
+    create, 
+    checkOrUncheck,
+    update,
+    remove
+}

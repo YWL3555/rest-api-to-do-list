@@ -1,0 +1,58 @@
+const toDoListService = require('../services/toDoListService');
+
+async function get(req, res) {
+    try {
+        if (req.params.listId){
+            //GetListById
+            res.json(await toDoListService.getById(req.params.listId));
+        } else {
+            //GetAll
+            res.json(await toDoListService.getAll());
+        }     
+    } catch (err) {
+        res.status(500).send();
+        console.error(`Error while getting to do lists`, err.message);
+
+    }
+}
+  
+async function create(req, res) {
+    try {
+        res.json(await toDoListService.create(req.body));
+    } catch (err) {
+        res.status(500).send();
+        console.error(`Error while creating to do list`, err.message);
+    }
+}
+  
+async function update(req, res) {
+    try {
+        res.json(await toDoListService.update(req.params.listId, req.body));
+    } catch (err) {
+        res.status(500).send();
+        console.error(`Error while updating to do list`, err.message);
+
+    }
+}
+  
+async function remove(req, res) {
+    try {
+        const result = await toDoListService.remove(req.params.listId);
+        if (result === 0){
+            res.status(404).send({error: 'No list found'});
+        } else {
+            res.json({'message':`To do List Id: ${req.params.listId} is deleted successfully`});
+        }
+    } catch (err) {
+        res.status(500).send();
+        console.error(`Error while deleting to do list`, err.message);
+
+    }
+}
+  
+module.exports = {
+    get,
+    create,
+    update,
+    remove
+};

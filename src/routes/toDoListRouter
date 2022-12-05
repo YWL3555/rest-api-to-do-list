@@ -1,0 +1,20 @@
+const express = require('express');
+const router = express.Router();
+const itemRouter = require('../routes/toDoItemRouter')
+const toDoListController = require('../controllers/toDoListController');
+
+router.use('/:listId/items', itemRouter);
+
+//GET
+router.get('/:listId?', toDoListController.get);
+  
+//POST
+router.post('/', toDoListController.create);
+
+//PUT
+router.put('/:listId', toDoListController.update);
+
+//DELETE
+router.delete('/:listId', toDoListController.remove);
+
+module.exports = router;

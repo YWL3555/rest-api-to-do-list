@@ -1,0 +1,9 @@
+module.exports = (sequelize, DataTypes) => {
+    const ToDoList = sequelize.define("toDoList", {
+        title: {
+            type: DataTypes.STRING
+        }
+    });
+  
+    return ToDoList;
+};

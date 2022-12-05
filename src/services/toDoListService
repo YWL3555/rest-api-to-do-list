@@ -1,0 +1,44 @@
+const db = require("../models/db");
+const ToDoItem = db.toDoItems;
+const ToDoList = db.toDoLists;
+
+async function getAll(){
+
+    const result = await ToDoList.findAll();
+    return result;
+}
+
+async function getById(toDoListId){
+
+    result = await ToDoList.findByPk(toDoListId);
+    return result;
+}
+
+async function create(toDoList){
+
+    const result = await ToDoList.create(toDoList);
+    return result;
+}
+
+async function update(toDoListId, updatedToDoList){
+
+    const count = await ToDoList.update(updatedToDoList, {where: {id: toDoListId}});
+    if (count[0] === 1){
+        return await ToDoList.findByPk(toDoListId);
+    }
+}
+
+async function remove(toDoListId){
+
+    await ToDoItem.destroy({where:{toDoListId:toDoListId}});
+    const count = await ToDoList.destroy({where:{id:toDoListId}});
+    return count;
+}
+
+module.exports = {
+    getAll,
+    getById,
+    create, 
+    update,
+    remove
+}

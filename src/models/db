@@ -1,0 +1,19 @@
+const  Sequelize = require('sequelize');
+
+const sequelize = new Sequelize('sqlite:./dev.sqlite');
+
+const db = {};
+
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
+
+db.toDoLists = require("./ToDoList")(sequelize, Sequelize);
+db.toDoItems = require("./ToDoItem")(sequelize, Sequelize);
+
+db.toDoLists.hasMany(db.toDoItems, { as: "toDoItems"});
+db.toDoItems.belongsTo(db.toDoLists, {
+  foreignKey: "toDoListId",
+  as: "toDoList",
+});
+
+module.exports = db;

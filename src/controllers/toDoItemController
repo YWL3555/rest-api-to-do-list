@@ -1,0 +1,70 @@
+const toDoItemService = require('../services/toDoItemService');
+
+async function get(req, res) {
+    try {
+        if (req.params.itemId){
+            //GetItemById
+            res.json(await toDoItemService.getByItemId(req.params.listId, req.params.itemId));            
+        } else {
+            const match = {};
+            const sort = [];
+            if(req.query.status){
+                match.status = req.query.status;
+            }
+        
+            if(req.query.sort_by && req.query.order_by){
+                sort[0] = req.query.sort_by
+                sort[1] = req.query.order_by === 'desc' ? "DESC" : "ASC"
+            }
+            //GetAllByListId          
+            res.json(await toDoItemService.getAllByListId(req.params.listId, match, sort));
+        }
+    } catch (err) {
+        res.status(500).send();
+        console.error(`Error while getting to do items`, err.message);
+    }
+}
+  
+async function create(req, res) {
+    try {
+        res.json(await toDoItemService.create(req.params.listId, req.body));
+    } catch (err) {
+        res.status(500).send();
+        console.error(`Error while creating to do item`, err.message);
+    }
+}
+  
+async function update(req, res) {
+    try {
+        if (req.params.action && req.params.action === "check"){
+            //Check or Uncheck item
+            res.json(await toDoItemService.checkOrUncheck(req.params.listId, req.params.itemId))
+        } else {
+            res.json(await toDoItemService.update(req.params.listId, req.params.itemId, req.body));
+        }     
+    } catch (err) {
+        res.status(500).send();
+        console.error(`Error while updating to do item`, err.message);
+    }
+}
+  
+async function remove(req, res) {
+    try {
+        const result = await toDoItemService.remove(req.params.listId, req.params.itemId);
+        if (result === 0){
+            res.status(404).send({error: 'No list found'});
+        } else {
+            res.json({'message':`To do Item Id: ${req.params.itemId} is deleted successfully`});
+        }
+    } catch (err) {
+        res.status(500).send();
+        console.error(`Error while deleting to do item`, err.message);
+    }
+}
+  
+module.exports = {
+    get,
+    create,
+    update,
+    remove
+};
