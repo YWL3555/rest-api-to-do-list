@@ -4,7 +4,8 @@
   "description": "REST API for todolist",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "nodemon index.js"
   },
   "author": "Yong Wen Li",
   "license": "ISC",
