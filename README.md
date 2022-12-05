@@ -1,4 +1,3 @@
-# to-do-list-api
+# rest-api-to-do-list
 
 nodemon index.js to run the server
-# rest-api-to-do-list
